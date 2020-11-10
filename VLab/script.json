@@ -1,0 +1,48 @@
+{
+    "scripts": [{
+            "repoPath": "run.sh",
+            "targetPath": "run.sh",
+            "pathType": "FILE"
+        },
+        {
+            "repoPath": "main.py",
+            "targetPath": "main.py",
+            "pathType": "FILE"
+        },
+        {
+            "repoPath": "generate_raster.py",
+            "targetPath": "generate_raster.py",
+            "pathType": "FILE"
+        },
+        {
+            "repoPath": "insitu_reader.py",
+            "targetPath": "insitu_reader.py",
+            "pathType": "FILE"
+        },
+        {
+            "repoPath": "prepare_edge_data.py",
+            "targetPath": "prepare_edge_data.py",
+            "pathType": "FILE"
+        },
+        {
+            "repoPath": "prepare_image.py",
+            "targetPath": "prepare_image.py",
+            "pathType": "FILE"
+        },
+        {
+            "repoPath": "prepare_sentinel_product.py",
+            "targetPath": "prepare_sentinel_product.py",
+            "pathType": "FILE"
+        },
+        {
+            "repoPath": "soil_moisture_ftp_client.py",
+            "targetPath": "soil_moisture_ftp_client.py",
+            "pathType": "FILE"
+        },
+        {
+            "repoPath": "utils.py",
+            "targetPath": "utils.py",
+            "pathType": "FILE"
+        }
+    ]
+}

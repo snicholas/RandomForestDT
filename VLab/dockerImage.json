@@ -1,0 +1,17 @@
+{
+    "image": "snicholas/vlabopis:0.3",
+    "privateimage": false,
+    "resources": {
+        "memory_mb": "7000",
+        "cpu_units": ""
+    },
+    "container": {
+        "entryPoint": [
+            "/bin/bash",
+            "-c"
+        ],
+        "command": [
+            "./run.sh"
+        ]
+    }
+}

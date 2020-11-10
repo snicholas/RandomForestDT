@@ -1,0 +1,99 @@
+{
+    "inputs": [{
+            "id": "train_path",
+            "inputType": "array",
+            "valueType": "value",
+            "description": "Satellite inputs streams",
+            "name": "Satellite inputs streams",
+            "obligation": false,
+            "hasDefault": false,
+            "valueSchema": "sat_product",
+            "target": "data/satproduct/"
+        },
+        {
+            "id": "edge_streams",
+            "inputType": "array",
+            "valueType": "value",
+            "description": "Edge inputs streams",
+            "name": "Edge inputs streams",
+            "obligation": false,
+            "hasDefault": false,
+            "valueSchema": "url",
+            "target": "data/edge/"
+        },
+        {
+            "id": "model_url",
+            "inputType": "individual",
+            "valueType": "value",
+            "description": "Url of the model to use",
+            "name": "Model url",
+            "obligation": false,
+            "hasDefault": false,
+            "valueSchema": "url",
+            "target": "data/model.joblib"
+        },
+        {
+            "id": "bbox",
+            "inputType": "individual",
+            "valueType": "value",
+            "name": "Bounding box",
+            "description": "bbox",
+            "obligation": true,
+            "hasDefault": true,
+            "valueSchema": "bbox",
+            "defaultValue": " "
+        },
+        {
+            "id": "features",
+            "inputType": "individual",
+            "valueType": "value",
+            "name": "Features",
+            "description": "Features comma separated",
+            "obligation": true,
+            "hasDefault": true,
+            "valueSchema": "string_parameter",
+            "defaultValue": " "
+        },
+        {
+            "id": "targets",
+            "inputType": "individual",
+            "valueType": "value",
+            "name": "Stream(s) to use as a target",
+            "description": "targets",
+            "obligation": true,
+            "hasDefault": true,
+            "valueSchema": "string_parameter",
+            "defaultValue": " "
+        },
+        {
+            "id": "modifiers",
+            "inputType": "individual",
+            "valueType": "value",
+            "name": "Modifiers for What-If scenario json formatted(?)",
+            "description": "What-If modifiers",
+            "obligation": false,
+            "hasDefault": true,
+            "valueSchema": "string_parameter",
+            "defaultValue": "{}"
+        }
+    ],
+    "outputs": [{
+            "id": "DataObject_outimg",
+            "outputType": "individual",
+            "valueType": "value",
+            "description": "prediction mask tif",
+            "name": "prediction mask tif",
+            "valueSchema": "url",
+            "target": "data/outputs/prediction.tif"
+        },
+        {
+            "id": "DataObject_outweights",
+            "outputType": "individual",
+            "valueType": "value",
+            "description": "Model weights",
+            "name": "Model weights",
+            "valueSchema": "url",
+            "target": "data/outputs/model.joblib"
+        }
+    ]
+}
