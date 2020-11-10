@@ -1,6 +1,0 @@
-{
-    "bboxid": "2.25,41.68,2.58,41.86",
-    "features": "b01,b02,b03,b04,b05,b06,b07,b08,b8a,b09,b10,b11,b12,HH,AIRTEMP,PREC",
-    "targets": "SOIL",
-    "modifiers": { "HH": 10, "AIRTEMP": 10 }
-}
