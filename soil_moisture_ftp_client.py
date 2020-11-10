@@ -14,15 +14,15 @@ def invoke_prepare(infolder, outfolder, coordinates):
         print(product_id)
         product_out = outfolder + product_id
         product_out = product_out.replace('.nc', '.tif')
-        tiff_file_name = product_id.replace('.nc', '.tif')
+        tiff_file_name = product_id.replace('.nc', '_tmp.tif')
 
         translate = 'gdal_translate -a_srs EPSG:4326 NETCDF:' + pf + ':sm -of GTiff ' + pf.replace(product_id, tiff_file_name)
         print("GDAL command " + translate)
         os.system(translate)
 
         do_transform(infile=pf.replace(product_id, tiff_file_name), outfile=product_out, coordinates=coordinates)
-        os.remove(pf.replace(product_id, tiff_file_name))
-        os.remove(pf)
+        # os.remove(pf.replace(product_id, tiff_file_name))
+        # os.remove(pf)
         
 
 def download_to(folder, outfolder, year, month, day, coordinates):

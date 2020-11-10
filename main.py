@@ -106,12 +106,13 @@ def main(argv):
         shape = None
         for fld in flds:
             Path('data/inputs/{}/'.format(fld)).mkdir(parents=True, exist_ok=True)
+            Path('data/edge/{}/'.format(fld)).mkdir(parents=True, exist_ok=True)
             shape = subset_and_resample("data/satproduct/{}/".format(fld), 'data/inputs/{}/'.format(fld), bbox )
             y, m, d = do_parse(fld)
             if 'SOIL' in vlabparams['features'].split(',') or 'SOIL' in vlabparams['targets'].split(','):
-                download_to('data/edge/','data/inputs/{}/'.format(fld),y,m,d, bbox)
-            print(y, m, d)
-            invoke_prepare('data/edge/','data/inputs/{}/'.format(fld),y,m,d, bbox, shape) 
+                download_to('data/edge/{}/'.format(fld),'data/inputs/{}/'.format(fld),y,m,d, bbox)
+            
+            invoke_prepare('data/edge/'.format(fld),'data/inputs/{}/'.format(fld),y,m,d, bbox, shape) 
         train()
 
 if __name__ == "__main__":
