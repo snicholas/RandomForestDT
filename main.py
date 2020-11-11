@@ -39,7 +39,7 @@ def train():
     features = vlabparams['features'].split(',')
     targets = vlabparams['targets'].split(',')
 
-    X, Y, _ = loadTrainData('data/inputs/', features = features, targets=targets)
+    X, Y, origshape = loadTrainData('data/inputs/', features = features, targets=targets)
     X = np.rollaxis(X, 0, 4)
     X = X.reshape(X.shape[0]*X.shape[1]*X.shape[2],X.shape[3])
     Y = Y.flatten()
@@ -61,7 +61,18 @@ def train():
     dump(regr, 'data/outputs/model.joblib')
     print("Test")
     print(regr.score(X_test,y_test))
-
+    del X_train, X_test, y_train, y_test
+    
+    flds = list(os.walk('data/satproduct/'))[0][1] 
+    X,origshape   = loadClassifyData('data/inputs/{}'.format(flds[0]), features = features, modifiers={})
+    X = np.rollaxis(X, 0, 4)
+    X = X.reshape(X.shape[0]*X.shape[1]*X.shape[2],X.shape[3])
+    Y = (regr.predict(X))
+    Y=Y.reshape(-1,32, 32)
+    Y=unblockshaped(Y,int(origshape[0]), int(origshape[1]))
+    numpy_array_to_raster('data/outputs/prediction.tif', Y, (2.2500000, 41.6800000),
+                          0.000091903317710, 1, NO_DATA,
+                          GDAL_DATA_TYPE, SPATIAL_REFERENCE_SYSTEM_WKID, GEOTIFF_DRIVER_NAME)
 
 def run():
     vlabparams=getVlabParams()
@@ -81,8 +92,6 @@ def run():
     numpy_array_to_raster('data/outputs/prediction.tif', Y, (2.2500000, 41.6800000),
                           0.000091903317710, 1, NO_DATA,
                           GDAL_DATA_TYPE, SPATIAL_REFERENCE_SYSTEM_WKID, GEOTIFF_DRIVER_NAME)
-
-    pass
 
 
 def main(argv):
