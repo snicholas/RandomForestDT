@@ -35,7 +35,7 @@ def getVlabParams():
 
 def train():
     vlabparams=getVlabParams()
-    bbox = vlabparams['bboxid'].split(',') 
+    bbox = vlabparams['bbox'].split(',') 
     features = vlabparams['features'].split(',')
     targets = vlabparams['targets'].split(',')
 
@@ -65,7 +65,7 @@ def train():
 
 def run():
     vlabparams=getVlabParams()
-    bbox = vlabparams['bboxid'].split(',')
+    bbox = vlabparams['bbox'].split(',')
     
     features = vlabparams['features'].split(',')
     modifiers = vlabparams['modifiers']
@@ -88,7 +88,7 @@ def run():
 def main(argv):
     #data/satproduct/
     vlabparams=getVlabParams()
-    bbox = vlabparams['bboxid'].split(',')
+    bbox = vlabparams['bbox'].split(',')
     Path("data/inputs/").mkdir(parents=True, exist_ok=True)
     flds = list(os.walk('data/satproduct/'))[0][1] 
     mode = int(sys.argv[1])
