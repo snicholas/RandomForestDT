@@ -2,7 +2,7 @@
     "image": "snicholas/vlabrandomforest:0.2",
     "privateimage": false,
     "resources": {
-        "memory_mb": "7000",
+        "memory_mb": "15000",
         "cpu_units": ""
     },
     "container": {
