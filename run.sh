@@ -11,6 +11,6 @@ if [ -f data/model.joblib ]; then
     echo "run execution"
     python main.py 0
     echo "ended execution"
-    cp data/model.joblib data/outputs/model.joblib
+    echo " " >> data/outputs/model.joblib
 fi
 echo "Model execution ended"
