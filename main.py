@@ -79,7 +79,7 @@ def run():
     bbox = vlabparams['bbox'].split(',')
     
     features = vlabparams['features'].split(',')
-    modifiers = vlabparams['modifiers']
+    modifiers = json.loads(vlabparams['modifiers'])
     
     X, origshape = loadClassifyData('data/inputs/', features = features, modifiers=modifiers)
     X = np.rollaxis(X, 0, 4)
