@@ -70,7 +70,7 @@ def train():
     Y = (regr.predict(X))
     Y=Y.reshape(-1,32, 32)
     Y=unblockshaped(Y,int(origshape[0]), int(origshape[1]))
-    numpy_array_to_raster('data/outputs/prediction.tif', Y, (2.2500000, 41.6800000),
+    numpy_array_to_raster('data/outputs/prediction.tif', Y, (float(bbox[0]), float(bbox[1])),
                           0.000091903317710, 1, NO_DATA,
                           GDAL_DATA_TYPE, SPATIAL_REFERENCE_SYSTEM_WKID, GEOTIFF_DRIVER_NAME)
 
@@ -89,7 +89,7 @@ def run():
     Y=Y.reshape(-1,32, 32)
     Y=unblockshaped(Y,int(origshape[0]), int(origshape[1]))
 
-    numpy_array_to_raster('data/outputs/prediction.tif', Y, (2.2500000, 41.6800000),
+    numpy_array_to_raster('data/outputs/prediction.tif', Y, (float(bbox[0]), float(bbox[1]),
                           0.000091903317710, 1, NO_DATA,
                           GDAL_DATA_TYPE, SPATIAL_REFERENCE_SYSTEM_WKID, GEOTIFF_DRIVER_NAME)
 
