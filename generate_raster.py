@@ -14,11 +14,19 @@ SPATIAL_REFERENCE_SYSTEM_WKID = 4326
 def do_parse(id):
     # S2A_MSIL1C_20171221T112501_N0206_R037_T29SNC_20171221T114356
     print('parsing ' + id)
-    string = id
-    y = string[11:15]
-    m = string[15:17]
-    d = string[17:19]
-    return y, m, d
+    if id.startswith("S2"):
+        string = id
+        y = string[11:15]
+        m = string[15:17]
+        d = string[17:19]
+        t=''
+    if id.startswith("S1"):
+        string = id
+        y = string[17:21]
+        m = string[21:23]
+        d = string[23:25]
+        t = string[7:10]
+    return t, y, m, d
 
 def create_raster(output_path,
                   columns,
@@ -120,7 +128,7 @@ def generate(infolder, datafile, fname, coordinates, shape):
         print(pf)
         print(product_id)
 
-        y, m, d = do_parse(product_id)
+        _, y, m, d = do_parse(product_id)
 
         dest = infolder + '/' + product_id + '/' + fname + '.tif'
 

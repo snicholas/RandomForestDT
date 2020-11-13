@@ -26,23 +26,24 @@ from soil_moisture_ftp_client import download_to
 from prepare_edge_data import invoke_prepare
 # csv edgestream
 # west,south,east,north,YYYY,MM,DD,value
+from sklearn.model_selection import RandomizedSearchCV, GridSearchCV
 
-def searchBestParamsGridCV(train_features, train_labels,test_features, test_labels ):
+def searchBestParamsGridCV(rf, base_model, train_features, train_labels,test_features, test_labels ):
     param_grid = {
         'bootstrap': [True],
-        'max_depth': [80, 90, 100, 110],
+        'max_depth': [1, 4, 8, 10],
         'max_features': [2, 3],
         'min_samples_leaf': [3, 4, 5],
         'min_samples_split': [8, 10, 12],
-        'n_estimators': [100, 200, 300, 1000]
+        'n_estimators': [20, 40, 50, 100]
     }
-    rf = RandomForestRegressor()
+    # rf = RandomForestRegressor()
     grid_search = GridSearchCV(estimator = rf, param_grid = param_grid, 
                           cv = 3, n_jobs = -1, verbose = 2)
     grid_search.fit(train_features, train_labels)
     pprint(grid_search.best_params_)
 
-    base_model = RandomForestRegressor(n_estimators = 10, random_state = 42)
+    # base_model = RandomForestRegressor(n_estimators = 10, random_state = 42)
     base_model.fit(train_features, train_labels)
     base_accuracy = evaluate(base_model, test_features, test_labels)
 
@@ -50,7 +51,7 @@ def searchBestParamsGridCV(train_features, train_labels,test_features, test_labe
     grid_accuracy = evaluate(best_grid, test_features, test_labels)
     print("grid_accuracy: ",grid_accuracy)
     print('Improvement of {:0.2f}%.'.format( 100 * (grid_accuracy - base_accuracy) / base_accuracy))
-
+    
 def getVlabParams():
     # bbox i west,south,east,north
     with open('vlabparams.json') as json_file:
@@ -110,20 +111,7 @@ def trainRegr():
     features = vlabparams['features'].split(',')
     targets = vlabparams['targets'].split(',')
 
-    X, Y, origshape = loadTrainData('data/inputs/', features = features, targets=targets)
-    X = np.rollaxis(X, 0, 4)
-    X = X.reshape(X.shape[0]*X.shape[1]*X.shape[2],X.shape[3])
-    Y = Y.flatten()
-    Y = np.digitize(Y,bins=[0.1, 0.2, 0.3, 0.4, 0.5]) #, 0.6, 0.7, 0.8, 0.9, 1.0])
-
-    print("X.shape: ", X.shape)
-    print("Y.shape: ", Y.shape)
-    X[np.isnan(X)]=0
-    Y[np.isnan(Y)]=0
-    print("Train/Test split")
-    X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.33, random_state=0)
-    del X,Y
-
+    X_train, X_test, y_train, y_test = getTestTrainData(features, targets)
     regr = RandomForestRegressor(max_depth=100, min_samples_leaf=3,min_samples_split=8, bootstrap=True,  random_state=0, n_estimators = 100, verbose=2, n_jobs=-1, warm_start=True)
     print("Train")
     regr.fit(X_train, y_train)
@@ -164,6 +152,45 @@ def run():
                           0.000091903317710, 1, NO_DATA,
                           GDAL_DATA_TYPE, SPATIAL_REFERENCE_SYSTEM_WKID, GEOTIFF_DRIVER_NAME)
 
+def getTestTrainData(features, targets):
+    X, Y, origshape = loadTrainData('data/inputs/', features = features, targets=targets)
+    X = np.rollaxis(X, 0, 4)
+    X = X.reshape(X.shape[0]*X.shape[1]*X.shape[2],X.shape[3])
+    Y = Y.flatten()
+    Y = np.digitize(Y,bins=[0.1, 0.2, 0.3, 0.4, 0.5]) #, 0.6, 0.7, 0.8, 0.9, 1.0])
+
+    print("X.shape: ", X.shape)
+    print("Y.shape: ", Y.shape)
+    X[np.isnan(X)]=0
+    Y[np.isnan(Y)]=0
+    print("Train/Test split")
+    X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.33, random_state=0)
+    del X,Y
+    return X_train, X_test, y_train, y_test
+
+def optimizeRegr():
+    vlabparams=getVlabParams()
+    bbox = vlabparams['bbox'].split(',') 
+    features = vlabparams['features'].split(',')
+    targets = vlabparams['targets'].split(',')
+
+    rf = RandomForestRegressor()
+    base_model = RandomForestRegressor(n_estimators = 10, random_state = 42)
+
+    X_train, X_test, y_train, y_test = getTestTrainData(features, targets)
+    searchBestParamsGridCV(rf, base_model, X_train, y_train,X_test, y_test )
+    
+
+def optimizeClassifier():
+    vlabparams=getVlabParams()
+    bbox = vlabparams['bbox'].split(',') 
+    features = vlabparams['features'].split(',')
+    targets = vlabparams['targets'].split(',')
+    rf = RandomForestClassifier()
+    base_model = RandomForestClassifier(n_estimators = 10, random_state = 42)
+    X_train, X_test, y_train, y_test = getTestTrainData(features, targets)
+    searchBestParamsGridCV(rf, base_model, X_train, y_train,X_test, y_test )
+
 def main(argv):
     #data/satproduct/
     vlabparams=getVlabParams()
@@ -176,7 +203,7 @@ def main(argv):
             Path('data/inputs/{}/'.format(fld)).mkdir(parents=True, exist_ok=True)
             Path('data/edge/{}/'.format(fld)).mkdir(parents=True, exist_ok=True)
             shape = subset_and_resample("data/satproduct/{}/".format(fld), 'data/inputs/{}/'.format(fld), bbox )
-            y, m, d = do_parse(fld)
+            _, y, m, d = do_parse(fld)
             if 'SOIL' in vlabparams['features'].split(',') or 'SOIL' in vlabparams['targets'].split(','):
                 download_to('data/edge/{}/'.format(fld),'data/inputs/{}/'.format(fld),y,m,d, bbox)
             
@@ -184,6 +211,12 @@ def main(argv):
 
     if mode==0:
         run()
+    elif mode==2:
+        trainRegr()
+    elif mode==3:
+        optimizeRegr()
+    elif mode==4:
+        optimizeClassifier()
     else:
         trainClass()
 
