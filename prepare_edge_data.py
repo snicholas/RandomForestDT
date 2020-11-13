@@ -29,7 +29,7 @@ def invoke_prepare(infolder, outfolder,y,m,d, coordinates, shape):
         print('v: ', v)
         image = np.ones([shape[0], shape[1]])*v
         
-        numpy_array_to_raster(product_out, image, (2.2500000, 41.6800000),
+        numpy_array_to_raster(product_out, image, (float(coordinates[0]), float(coordinates[3])),
                           0.000091903317710, 1, NO_DATA,
                           GDAL_DATA_TYPE, SPATIAL_REFERENCE_SYSTEM_WKID, GEOTIFF_DRIVER_NAME)
 

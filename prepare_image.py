@@ -2,10 +2,14 @@ import os, sys
 import numpy as np
 import fnmatch
 
+from PIL import Image
+
+import numpy as np
+from osgeo import gdal
 
 def ReadImage(fname, windowx, windowy):
-    from PIL import Image
-    im = np.array(Image.open(fname))
+    ds = gdal.Open(fname)
+    im = np.array(ds.GetRasterBand(1).ReadAsArray())
     if im.shape[0] % windowx != 0 or im.shape[1] % windowy != 0:
         # im.resize(im.shape[0] + (windowx - im.shape[0] % windowx), im.shape[1] + (windowx - im.shape[1] % windowy))
         z = np.zeros((im.shape[0] + (windowx - im.shape[0] % windowx), im.shape[1] + (windowx - im.shape[1] % windowy)), dtype=im.dtype)

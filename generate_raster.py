@@ -91,7 +91,7 @@ def numpy_array_to_raster(output_path,
                     0,
                     upper_left_tuple[1],
                     0,
-                    cell_resolution)
+                    -cell_resolution)
 
     spatial_reference = osr.SpatialReference()
     spatial_reference.ImportFromEPSG(spatial_reference_system_wkid)
@@ -109,11 +109,8 @@ def numpy_array_to_raster(output_path,
     return output_raster
 
 
-# numpy_array_to_raster('/Users/ilsanto/test.tif', numpy.zeros([1959, 3591], dtype=numpy.float32), (2.2500000, 41.6800000), 0.000091903317710, 1, NO_DATA,
-#                       GDAL_DATA_TYPE, SPATIAL_REFERENCE_SYSTEM_WKID, GEOTIFF_DRIVER_NAME)
-
-
-def generate(infolder, datafile, fname):
+def generate(infolder, datafile, fname, coordinates, shape):
+    
     in_dir = infolder
     product_folders = glob.glob(in_dir + '/*')
 
@@ -131,7 +128,7 @@ def generate(infolder, datafile, fname):
 
         print('generating ' + dest + ' with value ' + str(value))
 
-        numpy_array_to_raster(dest, numpy.ones([1959, 3591], dtype=numpy.float32) * value, (2.2500000, 41.6800000),
+        numpy_array_to_raster(dest, numpy.ones([shape[0], shape[1]], dtype=numpy.float32) * value, (coordinates[0], coordinates[3]),
                               0.000091903317710, 1, NO_DATA,
                               GDAL_DATA_TYPE, SPATIAL_REFERENCE_SYSTEM_WKID, GEOTIFF_DRIVER_NAME)
 
