@@ -211,14 +211,14 @@ def main(argv):
 
     if mode==0:
         run()
-    elif mode==2:
+    elif mode==1:
         trainRegr()
     elif mode==3:
         optimizeRegr()
     elif mode==4:
         optimizeClassifier()
-    else:
-        trainClass()
+    elif mode==2:
+        trainRegr()
 
 if __name__ == "__main__":
     main(sys.argv[1:])
